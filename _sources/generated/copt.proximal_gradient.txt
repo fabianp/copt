@@ -1,0 +1,6 @@
+copt.proximal_gradient
+======================
+
+.. currentmodule:: copt
+
+.. autofunction:: proximal_gradient

@@ -1,0 +1,180 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>copt.proximal_gradient &mdash; copt 0.1.0 documentation</title>
+    
+    <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/gallery.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '0.1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="top" title="copt 0.1.0 documentation" href="../index.html" />
+    <link rel="up" title="copt package" href="../copt.html" />
+    <link rel="next" title="Examples" href="../auto_examples/index.html" />
+    <link rel="prev" title="copt package" href="../copt.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body role="document">
+  <div class="document">
+    
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../index.html">copt</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../api.html">API Documentation</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../copt.html">copt package</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="../copt.html#copt-gradient-descent-module">copt.gradient_descent module</a><ul class="current">
+<li class="toctree-l3 current"><a class="current reference internal" href="">copt.proximal_gradient</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../auto_examples/index.html">Examples</a></li>
+</ul>
+
+
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+<h3><a href="../index.html">Table Of Contents</a></h3>
+
+        </div>
+      </div>
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="copt-proximal-gradient">
+<h1>copt.proximal_gradient<a class="headerlink" href="#copt-proximal-gradient" title="Permalink to this headline">¶</a></h1>
+<dl class="function">
+<dt id="copt.proximal_gradient">
+<code class="descclassname">copt.</code><code class="descname">proximal_gradient</code><span class="sig-paren">(</span><em>f</em>, <em>f_prime</em>, <em>g_prox</em>, <em>x0</em>, <em>alpha=1.0</em>, <em>tol=1e-06</em>, <em>max_iter=1000</em>, <em>verbose=0</em>, <em>callback=None</em>, <em>backtracking=True</em>, <em>step_size=1.0</em>, <em>max_iter_backtracking=20</em>, <em>g_prox_args=()</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/copt/gradient_descent.html#proximal_gradient"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#copt.proximal_gradient" title="Permalink to this definition">¶</a></dt>
+<dd><p>proximal gradient descent solver for optimization problems of the form</p>
+<blockquote>
+<div>minimize_x f(x) + alpha * g(x)</div></blockquote>
+<p>where we have access to the gradient of f and to the proximal operator of g.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>f</strong> : callable</p>
+<blockquote>
+<div><p>f(x) returns the value of f at x.</p>
+</div></blockquote>
+<p><strong>f_prime</strong> : callable</p>
+<blockquote>
+<div><p>f_prime(x) returns the gradient of f.</p>
+</div></blockquote>
+<p><strong>g_prox</strong> : callable or None</p>
+<blockquote>
+<div><p>g_prox(x, alpha) returns the proximal operator of g at x
+with parameter alpha.</p>
+</div></blockquote>
+<p><strong>x0</strong> : array-like</p>
+<blockquote>
+<div><p>Initial guess</p>
+</div></blockquote>
+<p><strong>backtracking</strong> : &#8216;line-search&#8217; or float</p>
+<blockquote>
+<div><p>XXX Step size.</p>
+</div></blockquote>
+<p><strong>max_iter</strong> : int</p>
+<blockquote>
+<div><p>Maximum number of iterations.</p>
+</div></blockquote>
+<p><strong>verbose</strong> : int</p>
+<blockquote>
+<div><p>Verbosity level, from 0 (no output) to 2 (output on each iteration)</p>
+</div></blockquote>
+<p><strong>step_size</strong> : float</p>
+<blockquote>
+<div><p>Starting value for the line-search procedure. XXX</p>
+</div></blockquote>
+<p><strong>callback</strong> : callable</p>
+<blockquote>
+<div><p>callback function (optional).</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>res</strong> : OptimizeResult</p>
+<blockquote class="last">
+<div><p>The optimization result represented as a
+<code class="docutils literal"><span class="pre">scipy.optimize.OptimizeResult</span></code> object. Important attributes are:
+<code class="docutils literal"><span class="pre">x</span></code> the solution array, <code class="docutils literal"><span class="pre">success</span></code> a Boolean flag indicating if
+the optimizer exited successfully and <code class="docutils literal"><span class="pre">message</span></code> which describes
+the cause of the termination. See <cite>scipy.optimize.OptimizeResult</cite>
+for a description of other attributes.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">References</p>
+<p>TODO</p>
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+    <div class="clearer"></div>
+  </div>
+    <div class="footer">
+      &copy;Fabian Pedregosa.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.3.5</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.9</a>
+      
+      |
+      <a href="../_sources/generated/copt.proximal_gradient.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>
