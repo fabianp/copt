@@ -11,7 +11,7 @@ colors = ['#7fc97f', '#beaed4', '#fdc086']
 
 
 from copt.prox_tv import prox_tv2d, prox_tv1d_rows, prox_tv1d_cols
-from copt import three_split, proximal_gradient
+from copt import davis_yin, proximal_gradient
 from copt.utils import Trace, set_mpl_style
 from copt.datasets import load_img1
 
@@ -27,11 +27,11 @@ n_rows, n_cols = img.shape
 n_features = n_rows * n_cols
 np.random.seed(0)
 n_samples = n_features
-
-plt.imshow(img, interpolation='nearest', cmap=plt.cm.Blues)
-plt.xticks(())
-plt.yticks(())
-plt.show()
+#
+# plt.imshow(img, interpolation='nearest', cmap=plt.cm.Blues)
+# plt.xticks(())
+# plt.yticks(())
+# plt.show()
 
 # set L2 regularization (arbitrarily) to 1/n_samples
 l2_reg = 1.0 / n_samples
@@ -57,33 +57,23 @@ def obj_fun(x):
 def grad(x):
     return - A.T.dot(b - A.dot(x)) / A.shape[0] + l2_reg * x
 
-############################
-# Find best step size
-
-from lightning.impl.sag import get_auto_step_size, get_dataset
-ds = get_dataset(A, order="c")
-step_size = get_auto_step_size(ds, l2_reg, 'squared')
 
 f, ax = plt.subplots(2, 3, sharey=False)
-plt.title('Reconstructed image')
 all_alphas = [1e-6, 1e-3, 1e-1]
 for i, alpha in enumerate(all_alphas):
 
-    max_iter = 50000
-    backtracking = False
+    max_iter = 5000
     trace_three = Trace(lambda x: obj_fun(x) + alpha * TV(x))
-    out_tos = three_split(
+    out_tos = davis_yin(
         obj_fun, grad, prox_tv1d_rows, prox_tv1d_cols, np.zeros(n_features),
-        alpha=alpha, beta=alpha, step_size=step_size,
-        g_prox_args=(n_rows, n_cols), h_prox_args=(n_rows, n_cols),
-        callback=trace_three, max_iter=max_iter, tol=1e-10, backtracking=backtracking)
+        alpha=alpha, beta=alpha, g_prox_args=(n_rows, n_cols), h_prox_args=(n_rows, n_cols),
+        callback=trace_three, max_iter=max_iter)
 
     trace_gd = Trace(lambda x: obj_fun(x) + alpha * TV(x))
     out_gd = proximal_gradient(
         obj_fun, grad, prox_tv2d, np.zeros(n_features),
         alpha=alpha, g_prox_args=(n_rows, n_cols, 1000, 1e-1),
-        step_size=step_size, max_iter=max_iter, tol=1e-10,
-        backtracking=backtracking, callback=trace_gd)
+        max_iter=max_iter, callback=trace_gd)
 
     ax[0, i].set_title(r'$\lambda=%s$' % alpha)
     ax[0, i].imshow(out_tos.x.reshape((n_rows, n_cols)),
@@ -95,16 +85,16 @@ for i, alpha in enumerate(all_alphas):
     scale = (np.array(trace_three.vals) - fmin)[0]
     ax[1, i].plot(
         np.array(trace_three.times), (np.array(trace_three.vals) - fmin) / scale,
-        label='Three operator splitting', lw=4, marker='o', markevery=500,
-        markersize=20, color=colors[0])
+        label='Three operator splitting', lw=4, marker='o', markevery=200,
+        markersize=10, color=colors[0])
     ax[1, i].plot(
         np.array(trace_gd.times), (np.array(trace_gd.vals) - fmin) / scale,
-        label='ProxGD', lw=4, marker='^', markersize=20, markevery=500,
+        label='ProxGD', lw=4, marker='^', markersize=10, markevery=200,
          color=colors[1])
     # plt.legend(loc='best', frameon=False)
     ax[1, i].set_xlabel('Time (in seconds)')
     ax[1, i].set_yscale('log')
     ax[1, i].grid(True)
-
+plt.legend(ncol=1, frameon=False)
 ax[1, 0].set_ylabel('Objective minus optimum')
 plt.show()
